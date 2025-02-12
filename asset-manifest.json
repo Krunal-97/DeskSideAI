@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/DeskSideAI/static/css/main.ee3054bb.css",
+    "main.js": "/DeskSideAI/static/js/main.32910d5d.js",
+    "index.html": "/DeskSideAI/index.html",
+    "main.ee3054bb.css.map": "/DeskSideAI/static/css/main.ee3054bb.css.map",
+    "main.32910d5d.js.map": "/DeskSideAI/static/js/main.32910d5d.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ee3054bb.css",
+    "static/js/main.32910d5d.js"
+  ]
+}
