@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/DeskSideAI/static/css/main.ee3054bb.css",
-    "main.js": "/DeskSideAI/static/js/main.32910d5d.js",
+    "main.css": "/DeskSideAI/static/css/main.dbcac7a4.css",
+    "main.js": "/DeskSideAI/static/js/main.2015c79d.js",
     "index.html": "/DeskSideAI/index.html",
-    "main.ee3054bb.css.map": "/DeskSideAI/static/css/main.ee3054bb.css.map",
-    "main.32910d5d.js.map": "/DeskSideAI/static/js/main.32910d5d.js.map"
+    "main.dbcac7a4.css.map": "/DeskSideAI/static/css/main.dbcac7a4.css.map",
+    "main.2015c79d.js.map": "/DeskSideAI/static/js/main.2015c79d.js.map"
   },
   "entrypoints": [
-    "static/css/main.ee3054bb.css",
-    "static/js/main.32910d5d.js"
+    "static/css/main.dbcac7a4.css",
+    "static/js/main.2015c79d.js"
   ]
 }
