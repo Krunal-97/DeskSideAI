@@ -11,47 +11,58 @@ const IncidentReportTemplate = () => {
   const [assetSwapModel, setAssetSwapModel] = useState("");
   const [resolved, setResolved] = useState(null);
   const [resolutionSteps, setResolutionSteps] = useState("");
-  const [resolutionProof, setResolutionProof] = useState("");
+  const [userConfirmation, setUserConfirmation] = useState(null);
+  const [userConfirmationEvidence, setUserConfirmationEvidence] = useState("");
+  const [strikeRuleApplied, setStrikeRuleApplied] = useState(null);
+  const [strikeRuleEvidence, setStrikeRuleEvidence] = useState("");
   const [escalationReason, setEscalationReason] = useState("");
   const [escalationTeam, setEscalationTeam] = useState("");
   const [isRecurring, setIsRecurring] = useState(null);
   const [recurringIncidentNumber, setRecurringIncidentNumber] = useState("");
-  const [isMaster, setIsMaster] = useState(null);
-  const [masterIncidentNumber, setMasterIncidentNumber] = useState("");
+  const [isDuplicate, setIsDuplicate] = useState(null);
+  const [duplicateIncidentNumber, setDuplicateIncidentNumber] = useState("");
   const [copiedContent, setCopiedContent] = useState("");
 
   const updateCopiedContent = () => {
     let content = "";
 
-    if (issue) content += `ISSUE: ${issue}\n`;
-    if (assetTag) content += `ASSET TAG: ${assetTag}\n`;
-    if (assetModel) content += `ASSET MODEL: ${assetModel}\n`;
+    if (issue) content += `ISSUE IN DETAIL: ${issue}\n`;
+    if (assetTag) content += `ORIGINAL ASSET S/N: ${assetTag}\n`;
+    if (assetModel) content += `MODEL: ${assetModel}\n`;
     if (troubleshootingSteps)
       content += `TROUBLESHOOTING STEPS: ${troubleshootingSteps}\n`;
     if (requiresAssetSwap !== null)
       content += `Does it require an Asset Swap?: ${requiresAssetSwap}\n`;
     if (requiresAssetSwap === "yes") {
-      if (assetSwapTag) content += `ASSET SWAP ASSET TAG: ${assetSwapTag}\n`;
-      if (assetSwapModel)
-        content += `ASSET SWAP ASSET MODEL: ${assetSwapModel}\n`;
+      if (assetSwapTag) content += `SWAP ASSET S/N: ${assetSwapTag}\n`;
+      if (assetSwapModel) content += `SWAP MODEL: ${assetSwapModel}\n`;
     }
     if (resolved !== null) content += `RESOLVED: ${resolved}\n`;
     if (resolved === "yes") {
-      if (resolutionSteps) content += `Resolution Steps: ${resolutionSteps}\n`;
-      if (resolutionProof) content += `Resolution Proof: ${resolutionProof}\n`;
+      if (resolutionSteps)
+        content += `RESOLUTION IN DETAIL - CLOSING NOTES: ${resolutionSteps}\n`;
+      if (userConfirmation !== null)
+        content += `USER CONFIRMATION: ${userConfirmation}\n`;
+      if (userConfirmationEvidence)
+        content += `USER CONFIRMATION EVIDENCE: ${userConfirmationEvidence}\n`;
+      if (strikeRuleApplied !== null)
+        content += `STRIKE RULE APPLIED: ${strikeRuleApplied}\n`;
+      if (strikeRuleApplied === "yes" && strikeRuleEvidence)
+        content += `STRIKE RULE EVIDENCE: ${strikeRuleEvidence}\n`;
     } else if (resolved === "no") {
       if (escalationReason)
-        content += `Escalation Reason: ${escalationReason}\n`;
-      if (escalationTeam) content += `Escalation Team: ${escalationTeam}\n`;
+        content += `ESCALATION REASON in DETAIL: ${escalationReason}\n`;
+      if (escalationTeam)
+        content += `TEAM TO BE ESCALATED: ${escalationTeam}\n`;
     }
+    if (isDuplicate !== null)
+      content += `DUPLICATE INC #: ${
+        isDuplicate === "yes" ? duplicateIncidentNumber : "No"
+      }\n`;
     if (isRecurring !== null)
-      content += `Is this a recurring incident?: ${isRecurring}\n`;
-    if (isRecurring === "yes" && recurringIncidentNumber)
-      content += `Recurring Incident Number: ${recurringIncidentNumber}\n`;
-    if (isMaster !== null)
-      content += `Is this the master incident?: ${isMaster}\n`;
-    if (isMaster === "yes" && masterIncidentNumber)
-      content += `Master Incident Number: ${masterIncidentNumber}\n`;
+      content += `RECURRING INCIDENT - MASTER INC #: ${
+        isRecurring === "yes" ? recurringIncidentNumber : "No"
+      }\n`;
 
     setCopiedContent(content);
   };
@@ -68,13 +79,16 @@ const IncidentReportTemplate = () => {
     assetSwapModel,
     resolved,
     resolutionSteps,
-    resolutionProof,
+    userConfirmation,
+    userConfirmationEvidence,
+    strikeRuleApplied,
+    strikeRuleEvidence,
     escalationReason,
     escalationTeam,
+    isDuplicate,
+    duplicateIncidentNumber,
     isRecurring,
     recurringIncidentNumber,
-    isMaster,
-    masterIncidentNumber,
   ]);
 
   const handleCopy = () => {
@@ -90,19 +104,21 @@ const IncidentReportTemplate = () => {
     requiresAssetSwap === null ||
     (requiresAssetSwap === "yes" && (!assetSwapTag || !assetSwapModel)) ||
     resolved === null ||
-    (resolved === "yes" && (!resolutionSteps || !resolutionProof)) ||
+    (resolved === "yes" &&
+      (!resolutionSteps || !userConfirmation || !strikeRuleApplied)) ||
     (resolved === "no" && (!escalationReason || !escalationTeam)) ||
+    isDuplicate === null ||
+    (isDuplicate === "yes" && !duplicateIncidentNumber) ||
     isRecurring === null ||
-    (isRecurring === "yes" && !recurringIncidentNumber) ||
-    isMaster === null ||
-    (isMaster === "yes" && !masterIncidentNumber);
+    (isRecurring === "yes" && !recurringIncidentNumber);
 
   return (
     <div className="container">
       <h1 className="heading">Incident Report Template</h1>
       <form>
+        {/* Group 1 */}
         <div>
-          <label className="label">ISSUE:</label>
+          <label className="label">ISSUE IN DETAIL:</label>
           <input
             type="text"
             className="input"
@@ -113,7 +129,7 @@ const IncidentReportTemplate = () => {
           />
         </div>
         <div>
-          <label className="label">ASSET TAG:</label>
+          <label className="label">ORIGINAL ASSET S/N:</label>
           <input
             type="text"
             className="input"
@@ -124,7 +140,7 @@ const IncidentReportTemplate = () => {
           />
         </div>
         <div>
-          <label className="label">ASSET MODEL:</label>
+          <label className="label">MODEL:</label>
           <input
             type="text"
             className="input"
@@ -145,6 +161,7 @@ const IncidentReportTemplate = () => {
           />
         </div>
 
+        {/* Group 2: Asset Swap */}
         <div>
           <label className="label">Does it require an Asset Swap?</label>
           <div className="radio-group">
@@ -176,7 +193,7 @@ const IncidentReportTemplate = () => {
         {requiresAssetSwap === "yes" && (
           <>
             <div>
-              <label className="label">ASSET SWAP ASSET TAG:</label>
+              <label className="label">SWAP ASSET S/N:</label>
               <input
                 type="text"
                 className="input"
@@ -187,7 +204,7 @@ const IncidentReportTemplate = () => {
               />
             </div>
             <div>
-              <label className="label">ASSET SWAP ASSET MODEL:</label>
+              <label className="label">SWAP MODEL:</label>
               <input
                 type="text"
                 className="input"
@@ -200,6 +217,7 @@ const IncidentReportTemplate = () => {
           </>
         )}
 
+        {/* Group 2: Resolution */}
         <div>
           <label className="label">RESOLVED?</label>
           <div className="radio-group">
@@ -231,7 +249,9 @@ const IncidentReportTemplate = () => {
         {resolved === "yes" && (
           <>
             <div>
-              <label className="label">Resolution Steps:</label>
+              <label className="label">
+                RESOLUTION IN DETAIL - CLOSING NOTES:
+              </label>
               <textarea
                 className="textarea"
                 placeholder="Describe the resolution steps"
@@ -241,14 +261,74 @@ const IncidentReportTemplate = () => {
               />
             </div>
             <div>
-              <label className="label">Resolution Proof:</label>
+              <label className="label">USER CONFIRMATION:</label>
+              <div className="radio-group">
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="userConfirmation"
+                    value="yes"
+                    checked={userConfirmation === "yes"}
+                    onChange={() => setUserConfirmation("yes")}
+                    required
+                  />
+                  Yes
+                </label>
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="userConfirmation"
+                    value="no"
+                    checked={userConfirmation === "no"}
+                    onChange={() => setUserConfirmation("no")}
+                    required
+                  />
+                  No
+                </label>
+              </div>
               <textarea
                 className="textarea"
-                placeholder="Provide proof of resolution (e.g., logs)"
-                value={resolutionProof}
-                onChange={(e) => setResolutionProof(e.target.value)}
+                placeholder="Provide evidence for user confirmation"
+                value={userConfirmationEvidence}
+                onChange={(e) => setUserConfirmationEvidence(e.target.value)}
                 required
               />
+            </div>
+            <div>
+              <label className="label">STRIKE RULE APPLIED:</label>
+              <div className="radio-group">
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="strikeRuleApplied"
+                    value="yes"
+                    checked={strikeRuleApplied === "yes"}
+                    onChange={() => setStrikeRuleApplied("yes")}
+                    required
+                  />
+                  Yes
+                </label>
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="strikeRuleApplied"
+                    value="no"
+                    checked={strikeRuleApplied === "no"}
+                    onChange={() => setStrikeRuleApplied("no")}
+                    required
+                  />
+                  No
+                </label>
+              </div>
+              {strikeRuleApplied === "yes" && (
+                <textarea
+                  className="textarea"
+                  placeholder="Provide evidence for strike rule"
+                  value={strikeRuleEvidence}
+                  onChange={(e) => setStrikeRuleEvidence(e.target.value)}
+                  required
+                />
+              )}
             </div>
           </>
         )}
@@ -256,7 +336,7 @@ const IncidentReportTemplate = () => {
         {resolved === "no" && (
           <>
             <div>
-              <label className="label">Escalation Reason:</label>
+              <label className="label">ESCALATION REASON in DETAIL:</label>
               <textarea
                 className="textarea"
                 placeholder="Describe the escalation reason"
@@ -266,7 +346,7 @@ const IncidentReportTemplate = () => {
               />
             </div>
             <div>
-              <label className="label">Escalation Team:</label>
+              <label className="label">TEAM TO BE ESCALATED:</label>
               <input
                 type="text"
                 className="input"
@@ -279,6 +359,50 @@ const IncidentReportTemplate = () => {
           </>
         )}
 
+        {/* Group 4: Duplicate Incident */}
+        <div>
+          <label className="label">Is this a duplicate incident?</label>
+          <div className="radio-group">
+            <label className="radio-label">
+              <input
+                type="radio"
+                name="duplicate"
+                value="yes"
+                checked={isDuplicate === "yes"}
+                onChange={() => setIsDuplicate("yes")}
+                required
+              />
+              Yes
+            </label>
+            <label className="radio-label">
+              <input
+                type="radio"
+                name="duplicate"
+                value="no"
+                checked={isDuplicate === "no"}
+                onChange={() => setIsDuplicate("no")}
+                required
+              />
+              No
+            </label>
+          </div>
+        </div>
+
+        {isDuplicate === "yes" && (
+          <div>
+            <label className="label">DUPLICATE INC #:</label>
+            <input
+              type="text"
+              className="input"
+              placeholder="Enter the duplicate incident number"
+              value={duplicateIncidentNumber}
+              onChange={(e) => setDuplicateIncidentNumber(e.target.value)}
+              required
+            />
+          </div>
+        )}
+
+        {/* Group 4: Recurring Incident */}
         <div>
           <label className="label">Is this a recurring incident?</label>
           <div className="radio-group">
@@ -309,55 +433,13 @@ const IncidentReportTemplate = () => {
 
         {isRecurring === "yes" && (
           <div>
-            <label className="label">Recurring Incident Number:</label>
+            <label className="label">RECURRING INCIDENT - MASTER INC #:</label>
             <input
               type="text"
               className="input"
               placeholder="Enter the recurring incident number"
               value={recurringIncidentNumber}
               onChange={(e) => setRecurringIncidentNumber(e.target.value)}
-              required
-            />
-          </div>
-        )}
-
-        <div>
-          <label className="label">Is this the master incident?</label>
-          <div className="radio-group">
-            <label className="radio-label">
-              <input
-                type="radio"
-                name="master"
-                value="yes"
-                checked={isMaster === "yes"}
-                onChange={() => setIsMaster("yes")}
-                required
-              />
-              Yes
-            </label>
-            <label className="radio-label">
-              <input
-                type="radio"
-                name="master"
-                value="no"
-                checked={isMaster === "no"}
-                onChange={() => setIsMaster("no")}
-                required
-              />
-              No
-            </label>
-          </div>
-        </div>
-
-        {isMaster === "yes" && (
-          <div>
-            <label className="label">Master Incident Number:</label>
-            <input
-              type="text"
-              className="input"
-              placeholder="Enter the master incident number"
-              value={masterIncidentNumber}
-              onChange={(e) => setMasterIncidentNumber(e.target.value)}
               required
             />
           </div>
