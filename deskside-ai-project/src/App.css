@@ -1,0 +1,10 @@
+.main-heading {
+  text-align: center;
+  margin: 50px auto;
+  font-size: 50px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.sub-component {
+  padding: 50px;
+  border-bottom: 5px solid black;
+}
